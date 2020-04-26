@@ -122,7 +122,7 @@ int mkcert(X509** x509p, EVP_PKEY** pkeyp, int bits, int serial, int days) {
     X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC,
                                (const unsigned char*)"localhost", -1, -1, 0);
     X509_NAME_add_entry_by_txt(name, "O", MBSTRING_ASC,
-                               (const unsigned char*)"Vazion", -1, -1, 0);
+                               (const unsigned char*)"Vaizon", -1, -1, 0);
 
     /* Its self signed so set the issuer name to be the same as the
      * subject.
