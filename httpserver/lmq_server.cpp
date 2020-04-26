@@ -1,7 +1,7 @@
 #include "lmq_server.h"
 
-#include "loki_common.h"
-#include "loki_logger.h"
+#include "vaizon_common.h"
+#include "vaizon_logger.h"
 #include "vaizond_key.h"
 #include "service_node.h"
 #include "request_handler.h"
@@ -9,11 +9,11 @@
 
 #include <lokimq/lokimq.h>
 
-namespace loki {
+namespace vaizon {
 
 std::string LokimqServer::peer_lookup(lokimq::string_view pubkey_bin) const {
 
-    LOKI_LOG(trace, "[LMQ] Peer Lookup");
+    VAIZON_LOG(trace, "[LMQ] Peer Lookup");
 
     // TODO: don't create a new string here
     boost::optional<sn_record_t> sn =
@@ -22,16 +22,16 @@ std::string LokimqServer::peer_lookup(lokimq::string_view pubkey_bin) const {
     if (sn) {
         return fmt::format("tcp://{}:{}", sn->ip(), sn->lmq_port());
     } else {
-        LOKI_LOG(debug, "[LMQ] peer node not found {}!", pubkey_bin);
+        VAIZON_LOG(debug, "[LMQ] peer node not found {}!", pubkey_bin);
         return "";
     }
 }
 
 void LokimqServer::handle_sn_data(lokimq::Message& message) {
 
-    LOKI_LOG(debug, "[LMQ] handle_sn_data");
-    LOKI_LOG(debug, "[LMQ]   thread id: {}", std::this_thread::get_id());
-    LOKI_LOG(debug, "[LMQ]   from: {}", util::as_hex(message.conn.pubkey()));
+    VAIZON_LOG(debug, "[LMQ] handle_sn_data");
+    VAIZON_LOG(debug, "[LMQ]   thread id: {}", std::this_thread::get_id());
+    VAIZON_LOG(debug, "[LMQ]   from: {}", util::as_hex(message.conn.pubkey()));
 
     std::stringstream ss;
 
@@ -43,7 +43,7 @@ void LokimqServer::handle_sn_data(lokimq::Message& message) {
     // TODO: proces push batch should move to "Request handler"
     service_node_->process_push_batch(ss.str());
 
-    LOKI_LOG(debug, "[LMQ] send reply");
+    VAIZON_LOG(debug, "[LMQ] send reply");
 
     // TODO: Investigate if the above could fail and whether we should report
     // that to the sending SN
@@ -52,12 +52,12 @@ void LokimqServer::handle_sn_data(lokimq::Message& message) {
 
 void LokimqServer::handle_sn_proxy_exit(lokimq::Message& message) {
 
-    LOKI_LOG(debug, "[LMQ] handle_sn_proxy_exit");
-    LOKI_LOG(debug, "[LMQ]   thread id: {}", std::this_thread::get_id());
-    LOKI_LOG(debug, "[LMQ]   from: {}", util::as_hex(message.conn.pubkey()));
+    VAIZON_LOG(debug, "[LMQ] handle_sn_proxy_exit");
+    VAIZON_LOG(debug, "[LMQ]   thread id: {}", std::this_thread::get_id());
+    VAIZON_LOG(debug, "[LMQ]   from: {}", util::as_hex(message.conn.pubkey()));
 
     if (message.data.size() != 2) {
-        LOKI_LOG(debug, "Expected 2 message parts, got {}",
+        VAIZON_LOG(debug, "Expected 2 message parts, got {}",
                  message.data.size());
         return;
     }
@@ -72,7 +72,7 @@ void LokimqServer::handle_sn_proxy_exit(lokimq::Message& message) {
     request_handler_->process_proxy_exit(
         std::string(client_key), std::string(payload),
         [this, origin_pk, reply_tag](loki::Response res) {
-            LOKI_LOG(debug, "    Proxy exit status: {}", res.status());
+            VAIZON_LOG(debug, "    Proxy exit status: {}", res.status());
 
             if (res.status() == Status::OK) {
                 this->lokimq_->send(origin_pk, "REPLY", reply_tag,
@@ -84,20 +84,20 @@ void LokimqServer::handle_sn_proxy_exit(lokimq::Message& message) {
                 this->lokimq_->send(origin_pk, "REPLY", reply_tag,
                                     fmt::format("{}", res.status()),
                                     res.message());
-                LOKI_LOG(debug, "Error: status is not OK for proxy_exit: {}", res.status());
+                VAIZON_LOG(debug, "Error: status is not OK for proxy_exit: {}", res.status());
             }
         });
 }
 
 void LokimqServer::handle_onion_request(lokimq::Message& message) {
 
-    LOKI_LOG(debug, "Got an onion request over LOKIMQ");
+    VAIZON_LOG(debug, "Got an onion request over LOKIMQ");
 
     auto &reply_tag = message.reply_tag;
     auto &origin_pk = message.conn.pubkey();
 
     auto on_response = [this, origin_pk, reply_tag](loki::Response res) mutable {
-        LOKI_LOG(trace, "on response: {}", to_string(res));
+        VAIZON_LOG(trace, "on response: {}", to_string(res));
 
         std::string status = std::to_string(static_cast<int>(res.status()));
 
@@ -108,14 +108,14 @@ void LokimqServer::handle_onion_request(lokimq::Message& message) {
         // Before 2.0.3 we reply with a bad request, below, but reply here to avoid putting the
         // error message in the log on 2.0.3+ nodes. (the reply code here doesn't actually matter;
         // the ping test only requires that we provide *some* response).
-        LOKI_LOG(debug, "Remote pinged me");
+        VAIZON_LOG(debug, "Remote pinged me");
         service_node_->update_last_ping(ReachType::ZMQ);
         on_response(loki::Response{Status::OK, "pong"});
         return;
     }
 
     if (message.data.size() != 2) {
-        LOKI_LOG(error, "Expected 2 message parts, got {}", message.data.size());
+        VAIZON_LOG(error, "Expected 2 message parts, got {}", message.data.size());
         on_response(loki::Response{Status::BAD_REQUEST, "Incorrect number of messages"});
         return;
     }
@@ -127,7 +127,7 @@ void LokimqServer::handle_onion_request(lokimq::Message& message) {
 }
 
 void LokimqServer::init(ServiceNode* sn, RequestHandler* rh,
-                        const lokid_key_pair_t& keypair) {
+                        const vaizond_key_pair_t& keypair) {
 
     using lokimq::Allow;
     using lokimq::string_view;
@@ -142,7 +142,7 @@ void LokimqServer::init(ServiceNode* sn, RequestHandler* rh,
                      std::string message) {
 #define LMQ_LOG_MAP(LMQ_LVL, SS_LVL) \
         case lokimq::LogLevel::LMQ_LVL: \
-            LOKI_LOG(SS_LVL, "[{}:{}]: {}", file, line, message); \
+            VAIZON_LOG(SS_LVL, "[{}:{}]: {}", file, line, message); \
             break;
 
         switch(level) {
@@ -152,7 +152,7 @@ void LokimqServer::init(ServiceNode* sn, RequestHandler* rh,
             LMQ_LOG_MAP(info, info);
             LMQ_LOG_MAP(trace, trace);
             default:
-                LOKI_LOG(debug, "[{}:{}]: {}", file, line, message);
+                VAIZON_LOG(debug, "[{}:{}]: {}", file, line, message);
         };
 #undef LMQ_LOG_MAP
     };
@@ -165,7 +165,7 @@ void LokimqServer::init(ServiceNode* sn, RequestHandler* rh,
                              lookup_fn,
                              logger});
 
-    LOKI_LOG(info, "LokiMQ is listenting on port {}", port_);
+    VAIZON_LOG(info, "LokiMQ is listenting on port {}", port_);
 
     lokimq_->log_level(lokimq::LogLevel::info);
 
@@ -191,4 +191,4 @@ void LokimqServer::init(ServiceNode* sn, RequestHandler* rh,
 LokimqServer::LokimqServer(uint16_t port) : port_(port){};
 LokimqServer::~LokimqServer() = default;
 
-} // namespace loki
+} // namespace vaizon

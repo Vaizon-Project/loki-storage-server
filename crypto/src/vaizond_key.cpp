@@ -12,12 +12,12 @@
 
 namespace fs = boost::filesystem;
 
-namespace loki {
+namespace vaizon {
 
-private_key_t lokidKeyFromHex(const std::string& private_key_hex) {
+private_key_t vaizondKeyFromHex(const std::string& private_key_hex) {
     if (private_key_hex.size() != KEY_LENGTH * 2)
         throw std::runtime_error(
-                "Lokid key data is invalid: expected " + std::to_string(KEY_LENGTH) + " bytes not " +
+                "Vaizond key data is invalid: expected " + std::to_string(KEY_LENGTH) + " bytes not " +
                 std::to_string(private_key_hex.size()) + " bytes");
 
     const auto bytes = util::hex_to_bytes(private_key_hex);
@@ -30,7 +30,7 @@ private_key_t lokidKeyFromHex(const std::string& private_key_hex) {
 private_key_ed25519_t
 private_key_ed25519_t::from_hex(const std::string& sc_hex) {
     if (sc_hex.size() != private_key_ed25519_t::LENGTH * 2)
-        throw std::runtime_error("Lokid key data is invalid: expected " +
+        throw std::runtime_error("Vaizond key data is invalid: expected " +
                                  std::to_string(private_key_ed25519_t::LENGTH) +
                                  " bytes not " + std::to_string(sc_hex.size()) +
                                  " bytes");
@@ -67,9 +67,9 @@ public_key_t derive_pubkey_ed25519(const private_key_ed25519_t& seckey) {
     return pubkey;
 }
 
-std::string key_to_string(const std::array<uint8_t, loki::KEY_LENGTH>& key) {
+std::string key_to_string(const std::array<uint8_t, vaizon::KEY_LENGTH>& key) {
     auto pk = reinterpret_cast<const char*>(&key);
-    return std::string{pk, loki::KEY_LENGTH};
+    return std::string{pk, vaizon::KEY_LENGTH};
 }
 
-} // namespace loki
+} // namespace vaizon

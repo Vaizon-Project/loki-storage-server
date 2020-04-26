@@ -5,8 +5,8 @@
 #include "utils.hpp"
 #include <fstream>
 
-namespace loki {
-Security::Security(const lokid_key_pair_t& key_pair,
+namespace vaizon {
+Security::Security(const vaizond_key_pair_t& key_pair,
                    const boost::filesystem::path& base_path)
     : key_pair_(key_pair), base_path_(base_path) {}
 
@@ -38,4 +38,4 @@ void Security::generate_cert_signature() {
 }
 
 std::string Security::get_cert_signature() const { return cert_signature_; }
-} // namespace loki
+} // namespace vaizon

@@ -52,7 +52,7 @@ set_property(TARGET httpserver_lib PROPERTY CXX_STANDARD 14)
 target_include_directories(httpserver_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${Boost_INCLUDE_DIRS})
 target_link_libraries(httpserver_lib PUBLIC ${Boost_LIBRARIES})
 
-set(BIN_NAME loki-storage)
+set(BIN_NAME vaizon-storage)
 
 add_executable(httpserver main.cpp)
 set_target_properties(httpserver PROPERTIES OUTPUT_NAME ${BIN_NAME})

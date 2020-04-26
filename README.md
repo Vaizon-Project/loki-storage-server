@@ -1,5 +1,5 @@
-# loki-storage-server
-Storage server for Loki Service Nodes
+# vaizon-storage-server
+Storage server for Vaizon Service Nodes
 
 Requirements:
 * Boost >= 1.66 (for boost.beast)
@@ -13,7 +13,7 @@ git submodule update --init --recursive
 mkdir build && cd build
 cmake -DDISABLE_SNODE_SIGNATURE=OFF -DCMAKE_BUILD_TYPE=Release ..
 cmake --build .
-./loki-storage 0.0.0.0 8080
+./vaizon-storage 0.0.0.0 8080
 ```
 
 The paths for Boost and OpenSSL can be specified by exporting the variables in the terminal before running `make`:
@@ -29,17 +29,17 @@ Then using something like Postman (https://www.getpostman.com/) you can hit the 
 HTTP POST http://127.0.0.1/store
 body: "hello world"
 headers:
-- X-Loki-recipient: "mypubkey"
-- X-Loki-ttl: "86400"
-- X-Loki-timestamp: "1540860811000"
-- X-Loki-pow-nonce: "xxxx..."
+- X-Vaizon-recipient: "mypubkey"
+- X-Vaizon-ttl: "86400"
+- X-Vaizon-timestamp: "1540860811000"
+- X-Vaizon-pow-nonce: "xxxx..."
 ```
 # get data
 ```
 HTTP GET http://127.0.0.1/retrieve
 headers:
-- X-Loki-recipient: "mypubkey"
-- X-Loki-last-hash: "" (optional)
+- X-Vaizon-recipient: "mypubkey"
+- X-Vaizon-last-hash: "" (optional)
 ```
 
 # unit tests

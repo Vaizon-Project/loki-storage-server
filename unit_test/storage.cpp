@@ -12,9 +12,9 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/thread/thread.hpp>
 
-using loki::storage::Item;
+using vaizon::storage::Item;
 
-using namespace loki;
+using namespace vaizon;
 
 struct StorageRAIIFixture {
     StorageRAIIFixture() {

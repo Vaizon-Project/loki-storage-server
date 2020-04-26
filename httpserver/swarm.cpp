@@ -1,6 +1,6 @@
 #include "swarm.h"
 #include "http_connection.h"
-#include "loki_logger.h"
+#include "vaizon_logger.h"
 
 #include "service_node.h"
 
@@ -10,7 +10,7 @@
 
 #include "utils.hpp"
 
-namespace loki {
+namespace vaizon {
 
 static bool swarm_exists(const all_swarms_t& all_swarms,
                          const swarm_id_t& swarm) {
@@ -121,13 +121,13 @@ SwarmEvents Swarm::derive_swarm_events(const all_swarms_t& swarms) const {
 void Swarm::set_swarm_id(swarm_id_t sid) {
 
     if (sid == INVALID_SWARM_ID) {
-        LOKI_LOG(warn, "We are not currently an active Service Node");
+        VAIZON_LOG(warn, "We are not currently an active Service Node");
     } else {
 
         if (cur_swarm_id_ == INVALID_SWARM_ID) {
-            LOKI_LOG(info, "EVENT: started SN in swarm: {}", sid);
+            VAIZON_LOG(info, "EVENT: started SN in swarm: {}", sid);
         } else if (cur_swarm_id_ != sid) {
-            LOKI_LOG(info, "EVENT: got moved into a new swarm: {}", sid);
+            VAIZON_LOG(info, "EVENT: got moved into a new swarm: {}", sid);
         }
     }
 
@@ -168,13 +168,13 @@ static all_swarms_t apply_ips(const all_swarms_t& swarms_to_keep,
         }
     }
 
-    LOKI_LOG(debug, "Updated {} entries from lokid", updates_count);
+    VAIZON_LOG(debug, "Updated {} entries from vaizond", updates_count);
     return result_swarms;
 }
 
 void Swarm::apply_swarm_changes(const all_swarms_t& new_swarms) {
 
-    LOKI_LOG(trace, "Applying swarm changes");
+    VAIZON_LOG(trace, "Applying swarm changes");
 
     all_valid_swarms_ = apply_ips(new_swarms, all_valid_swarms_);
 }
@@ -188,15 +188,15 @@ void Swarm::update_state(const all_swarms_t& swarms,
         // The following only makes sense for active nodes in a swarm
 
         if (events.dissolved) {
-            LOKI_LOG(info, "EVENT: our old swarm got DISSOLVED!");
+            VAIZON_LOG(info, "EVENT: our old swarm got DISSOLVED!");
         }
 
         for (const sn_record_t& sn : events.new_snodes) {
-            LOKI_LOG(info, "EVENT: detected new SN: {}", sn);
+            VAIZON_LOG(info, "EVENT: detected new SN: {}", sn);
         }
 
         for (swarm_id_t swarm : events.new_swarms) {
-            LOKI_LOG(info, "EVENT: detected a new swarm: {}", swarm);
+            VAIZON_LOG(info, "EVENT: detected a new swarm: {}", swarm);
         }
 
         apply_swarm_changes(swarms);
@@ -386,4 +386,4 @@ const std::vector<sn_record_t>& Swarm::other_nodes() const {
     return swarm_peers_;
 }
 
-} // namespace loki
+} // namespace vaizon

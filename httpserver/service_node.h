@@ -13,7 +13,7 @@
 #include <boost/optional.hpp>
 #include <boost/thread/thread.hpp>
 
-#include "loki_common.h"
+#include "vaizon_common.h"
 #include "vaizond_key.h"
 #include "pow.hpp"
 #include "reachability_testing.h"
@@ -30,7 +30,7 @@ class Database;
 namespace http = boost::beast::http;
 using request_t = http::request<http::string_body>;
 
-namespace loki {
+namespace vaizon {
 
 namespace storage {
 struct Item;
@@ -40,7 +40,7 @@ struct sn_response_t;
 struct blockchain_test_answer_t;
 struct bc_test_params_t;
 
-class LokidClient;
+class VaizondClient;
 class LokimqServer;
 
 namespace ss_client {
@@ -54,7 +54,7 @@ namespace http_server {
 class connection_t;
 }
 
-struct lokid_key_pair_t;
+struct vaizond_key_pair_t;
 
 using connection_ptr = std::shared_ptr<http_server::connection_t>;
 
@@ -116,7 +116,7 @@ class ServiceNode {
     int hardfork_ = 0;
     uint64_t block_height_ = 0;
     uint64_t target_height_ = 0;
-    const LokidClient& lokid_client_;
+    const VaizondClient& vaizond_client_;
     std::string block_hash_;
     std::unique_ptr<Swarm> swarm_;
     std::unique_ptr<Database> db_;
@@ -135,7 +135,7 @@ class ServiceNode {
 
     boost::asio::steady_timer swarm_update_timer_;
 
-    boost::asio::steady_timer lokid_ping_timer_;
+    boost::asio::steady_timer vaizond_ping_timer_;
 
     boost::asio::steady_timer stats_cleanup_timer_;
 
@@ -144,7 +144,7 @@ class ServiceNode {
     /// Used to periodially send messages from relay_buffer_
     boost::asio::steady_timer relay_timer_;
 
-    loki::lokid_key_pair_t lokid_key_pair_;
+    vaizon::vaizond_key_pair_t vaizond_key_pair_;
 
     // Need to make sure we only use this to get lmq() object and
     // not call any method that would in turn call a method in SN
@@ -206,7 +206,7 @@ class ServiceNode {
     void pow_difficulty_timer_tick(const pow_dns_callback_t cb); // mutex not needed
 
     /// Ping the storage server periodically as required for uptime proofs
-    void lokid_ping_timer_tick();
+    void vaizond_ping_timer_tick();
 
     /// Return tester/testee pair based on block_height
     bool derive_tester_testee(uint64_t block_height, sn_record_t& tester,
@@ -220,7 +220,7 @@ class ServiceNode {
                                   bc_test_params_t params, uint64_t test_height,
                                   blockchain_test_answer_t answer);
 
-    /// Report `sn` to Lokid as unreachable
+    /// Report `sn` to Vaizond as unreachable
     void report_node_reachability(const sn_pub_key_t& sn, bool reachable);
 
     void process_storage_test_response(const sn_record_t& testee,
@@ -251,8 +251,8 @@ class ServiceNode {
     ServiceNode(boost::asio::io_context& ioc,
                 boost::asio::io_context& worker_ioc, uint16_t port,
                 LokimqServer& lmq_server,
-                const loki::lokid_key_pair_t& key_pair,
-                const std::string& db_location, LokidClient& lokid_client,
+                const vaizon::vaizond_key_pair_t& key_pair,
+                const std::string& db_location, VaizondClient& vaizond_client,
                 const bool force_start);
 
     ~ServiceNode();
@@ -325,4 +325,4 @@ class ServiceNode {
     find_node_by_ed25519_pk(const std::string& pk) const;
 };
 
-} // namespace loki
+} // namespace vaizon

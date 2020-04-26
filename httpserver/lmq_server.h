@@ -13,9 +13,9 @@ class Message;
 
 using lokimq::LokiMQ;
 
-namespace loki {
+namespace vaizon {
 
-struct lokid_key_pair_t;
+struct vaizond_key_pair_t;
 class ServiceNode;
 class RequestHandler;
 
@@ -47,7 +47,7 @@ class LokimqServer {
 
     // Initialize lokimq
     void init(ServiceNode* sn, RequestHandler* rh,
-              const lokid_key_pair_t& keypair);
+              const vaizond_key_pair_t& keypair);
 
     uint16_t port() { return port_; }
 
@@ -58,4 +58,4 @@ class LokimqServer {
     LokiMQ* operator->() const { return lokimq_.get(); }
 };
 
-} // namespace loki
+} // namespace vaizon

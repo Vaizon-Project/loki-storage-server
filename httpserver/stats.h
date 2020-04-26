@@ -1,11 +1,11 @@
 #pragma once
 
-#include "loki_common.h"
+#include "vaizon_common.h"
 #include <deque>
 #include <unordered_map>
 #include <atomic>
 
-namespace loki {
+namespace vaizon {
 
 struct time_entry_t {
     time_t timestamp;
@@ -166,4 +166,4 @@ class all_stats_t {
     time_point_t get_reset_time() const { return reset_time_; }
 };
 
-} // namespace loki
+} // namespace vaizon

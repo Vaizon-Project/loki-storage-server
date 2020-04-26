@@ -5,7 +5,7 @@
 #include <vector>
 #include <lokimq/auth.h>
 
-#include "loki_common.h"
+#include "vazion_common.h"
 
 namespace boost {
 namespace asio {
@@ -13,7 +13,7 @@ class io_context;
 }
 } // namespace boost
 
-namespace loki {
+namespace vaizon {
 
 class ServiceNode;
 
@@ -119,4 +119,4 @@ class Swarm {
     find_node_by_x25519_bin(const sn_pub_key_t& address) const;
 };
 
-} // namespace loki
+} // namespace vaizon
