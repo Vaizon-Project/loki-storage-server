@@ -2,7 +2,7 @@
 
 #include "loki_common.h"
 #include "loki_logger.h"
-#include "lokid_key.h"
+#include "vaizond_key.h"
 #include "service_node.h"
 #include "request_handler.h"
 #include "utils.hpp"

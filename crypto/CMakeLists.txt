@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 14)
 set(CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
-    src/lokid_key.cpp
-    include/lokid_key.h
+    src/vaizond_key.cpp
+    include/vaizond_key.h
     include/channel_encryption.hpp
     src/channel_encryption.cpp
     src/signature.cpp
@@ -37,7 +37,7 @@ target_include_directories(crypto
     ${CMAKE_CURRENT_LIST_DIR}/../vendors
 )
 
-loki_add_subdirectory(../utils utils)
+vaizon_add_subdirectory(../utils utils)
 
 target_link_libraries(crypto PUBLIC utils)
 

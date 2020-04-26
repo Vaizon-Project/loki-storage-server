@@ -14,7 +14,7 @@
 #include <boost/thread/thread.hpp>
 
 #include "loki_common.h"
-#include "lokid_key.h"
+#include "vaizond_key.h"
 #include "pow.hpp"
 #include "reachability_testing.h"
 #include "stats.h"

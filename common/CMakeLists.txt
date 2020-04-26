@@ -14,7 +14,7 @@ find_package(Boost
 
 set_property(TARGET common PROPERTY CXX_STANDARD 14)
 
-loki_add_subdirectory(../vendors/spdlog spdlog)
+vaizon_add_subdirectory(../vendors/spdlog spdlog)
 
 target_link_libraries(common PUBLIC spdlog::spdlog ${Boost_LIBRARIES})
 target_include_directories(common PUBLIC

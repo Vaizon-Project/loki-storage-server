@@ -7,7 +7,7 @@
 #include "lmq_server.h"
 #include "loki_common.h"
 #include "loki_logger.h"
-#include "lokid_key.h"
+#include "vaizond_key.h"
 #include "net_stats.h"
 #include "serialization.h"
 #include "signature.h"

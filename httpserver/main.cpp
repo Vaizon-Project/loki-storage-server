@@ -2,7 +2,7 @@
 #include "command_line.h"
 #include "http_connection.h"
 #include "loki_logger.h"
-#include "lokid_key.h"
+#include "vaizond_key.h"
 #include "rate_limiter.h"
 #include "security.h"
 #include "service_node.h"

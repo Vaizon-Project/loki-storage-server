@@ -1,5 +1,5 @@
 #include "security.h"
-#include "lokid_key.h"
+#include "vaizond_key.h"
 #include "signature.h"
 
 #include "utils.hpp"

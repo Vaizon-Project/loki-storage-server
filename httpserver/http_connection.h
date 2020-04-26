@@ -14,7 +14,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
-#include "lokid_key.h"
+#include "vaizond_key.h"
 #include "swarm.h"
 
 constexpr auto LOKI_SENDER_SNODE_PUBKEY_HEADER = "X-Loki-Snode-PubKey";
