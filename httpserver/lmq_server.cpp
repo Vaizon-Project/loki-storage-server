@@ -71,7 +71,7 @@ void LokimqServer::handle_sn_proxy_exit(lokimq::Message& message) {
     // TODO: accept string_view?
     request_handler_->process_proxy_exit(
         std::string(client_key), std::string(payload),
-        [this, origin_pk, reply_tag](loki::Response res) {
+        [this, origin_pk, reply_tag](vaizon::Response res) {
             VAIZON_LOG(debug, "    Proxy exit status: {}", res.status());
 
             if (res.status() == Status::OK) {
@@ -96,7 +96,7 @@ void LokimqServer::handle_onion_request(lokimq::Message& message) {
     auto &reply_tag = message.reply_tag;
     auto &origin_pk = message.conn.pubkey();
 
-    auto on_response = [this, origin_pk, reply_tag](loki::Response res) mutable {
+    auto on_response = [this, origin_pk, reply_tag](vaizon::Response res) mutable {
         VAIZON_LOG(trace, "on response: {}", to_string(res));
 
         std::string status = std::to_string(static_cast<int>(res.status()));
@@ -110,13 +110,13 @@ void LokimqServer::handle_onion_request(lokimq::Message& message) {
         // the ping test only requires that we provide *some* response).
         VAIZON_LOG(debug, "Remote pinged me");
         service_node_->update_last_ping(ReachType::ZMQ);
-        on_response(loki::Response{Status::OK, "pong"});
+        on_response(vaizon::Response{Status::OK, "pong"});
         return;
     }
 
     if (message.data.size() != 2) {
         VAIZON_LOG(error, "Expected 2 message parts, got {}", message.data.size());
-        on_response(loki::Response{Status::BAD_REQUEST, "Incorrect number of messages"});
+        on_response(vaizon::Response{Status::BAD_REQUEST, "Incorrect number of messages"});
         return;
     }
 
