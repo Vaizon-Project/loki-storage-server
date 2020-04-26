@@ -5,7 +5,7 @@
 #include <vector>
 #include <lokimq/auth.h>
 
-#include "vazion_common.h"
+#include "vaizon_common.h"
 
 namespace boost {
 namespace asio {
