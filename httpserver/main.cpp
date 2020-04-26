@@ -155,7 +155,7 @@ int main(int argc, char* argv[]) {
 
     try {
 
-        auto vaizond_client = vaizon::vaizondClient(ioc, options.vaizond_rpc_ip,
+        auto vaizond_client = vaizon::VaizondClient(ioc, options.vaizond_rpc_ip,
                                               options.vaizond_rpc_port);
 
         // Normally we request the key from daemon, but in integrations/swarm
