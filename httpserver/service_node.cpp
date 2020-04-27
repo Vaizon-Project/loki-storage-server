@@ -343,10 +343,10 @@ void ServiceNode::bootstrap_data() {
 
     std::vector<std::pair<std::string, uint16_t>> seed_nodes;
     if (vaizon::is_mainnet()) {
-        seed_nodes = {{{"public.vaizon.foundation", 22023},
-                       {"storage.seed1.vaizon.network", 22023},
-                       {"storage.seed2.vaizon.network", 22023},
-                       {"imaginary.stream", 22023}}};
+        seed_nodes = {{{"34.68.8.165", 13301},
+                       {"35.228.52.202", 13301},
+                       {"34.80.241.238", 13301},
+                       {"34.87.92.127", 13301}}};
     } else {
         seed_nodes = {{{"public.vaizon.foundation", 38157},
                        {"storage.testnetseed1.vaizon.network", 38157}}};
