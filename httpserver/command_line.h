@@ -8,7 +8,7 @@ namespace vaizon {
 struct command_line_options {
     uint16_t port;
     std::string vaizond_rpc_ip = "127.0.0.1";
-    uint16_t vaizond_rpc_port = 22023; // Or 38157 if `testnet`
+    uint16_t vaizond_rpc_port = 13301; // Or 38157 if `testnet`
     uint16_t lmq_port;
     bool force_start = false;
     bool print_version = false;
